@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Entrada;
 use App\Http\Requests\StoreEntradaRequest;
 use App\Http\Requests\UpdateEntradaRequest;
+    use Illuminate\Http\Request;
 
 class EntradaController extends Controller
 {
@@ -20,26 +21,34 @@ class EntradaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+
+public function create(Request $request)
 {
     $mundos = \App\Models\Mundo::all();
-    return view('personajes.create', compact('mundos'));
+    $mundoSeleccionadoId = $request->query('mundo_id');
+
+    return view('entradas.create', compact('mundos', 'mundoSeleccionadoId'));
 }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEntradaRequest $request)
-    {
-        //
-    }
+   public function store(StoreEntradaRequest $request)
+{
+    $datosValidados = $request->validated();
+
+    Entrada::create($datosValidados);
+
+    return redirect()->route('mundos.show', $datosValidados['mundo_id'])
+                     ->with('success', '¡Nueva entrada de historia añadida al registro!');
+}
 
     /**
      * Display the specified resource.
      */
     public function show(Entrada $entrada)
     {
-        //
+        return view('entradas.show', compact('entrada'));
     }
 
     /**

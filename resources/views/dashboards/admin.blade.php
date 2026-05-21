@@ -15,7 +15,13 @@
                     
                     <p style="font-size: 12px; color: #666; margin: 10px 0;">Referencia: {{ $imagen->ref_type }} #{{ $imagen->ref_id }}</p>
                     
-                    <button style="background: #4CAF50; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;">Aprobar</button>
+                    <form action="{{ route('admin.imagenes.aprobar', $imagen->id) }}" method="POST" style="display: inline-block;">
+    @csrf
+    @method('PATCH')
+    <button type="submit" style="background: #4CAF50; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;">
+        Aprobar
+    </button>
+</form>
                     <button style="background: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;">Rechazar</button>
                 </div>
             @endforeach

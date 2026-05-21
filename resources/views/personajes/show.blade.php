@@ -16,8 +16,8 @@
     </div>
 
     <div style="margin-bottom: 20px;">
-        <a href="#" style="display:inline-block; padding:10px; background:#4CAF50; color:#fff; text-decoration:none;">Ver / Editar Moodboard del Personaje</a>
+        <a href="{{ route('personajes.moodboard', $personaje->id) }}" style="display:inline-block; padding:10px; background:#4CAF50; color:#fff; text-decoration:none;">Ver / Editar Moodboard del Personaje</a>
     </div>
 
-    <a href="{{ route('personajes.index') }}" style="text-decoration: none; color: blue;">← Volver a Personajes</a>
+    <a href="{{ route('mundos.show', $personaje->mundo_id) }}" style="text-decoration: none; color: blue;">← Volver al Mundo</a>
 @endsection

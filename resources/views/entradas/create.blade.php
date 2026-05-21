@@ -6,17 +6,7 @@
     <form action="{{ route('entradas.store') }}" method="POST">
         @csrf
 
-        <div class="form-group">
-            <label for="mundo_id">¿De qué mundo es esta historia? *</label>
-            <select name="mundo_id" id="mundo_id">
-                <option value="">-- Selecciona un mundo --</option>
-                @foreach($mundos ?? [] as $mundo)
-                    <option value="{{ $mundo->id }}" {{ old('mundo_id') == $mundo->id ? 'selected' : '' }}>
-                        {{ $mundo->titulo }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        <input type="hidden" name="mundo_id" value="{{ $mundoSeleccionadoId }}">
 
         <div class="form-group">
             <label for="titulo">Título de la Entrada *</label>
