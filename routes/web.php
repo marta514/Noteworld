@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MundoController;
 use App\Http\Controllers\PersonajeController;
 use App\Http\Controllers\EntradaController;
+use App\Http\Controllers\PdfController;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvitacionColaborador;
+use App\Http\Controllers\IAController;
 
 Route::get('/', function () {
     // Si el usuario ya inició sesión...
@@ -65,12 +69,25 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('mundos', MundoController::class)->except(['index']);
     Route::resource('personajes', PersonajeController::class)->except(['index']);
     Route::resource('entradas', EntradaController::class)->except(['index']);
+    Route::get('/mundos/{mundo}/pdf', [PdfController::class, 'generarBiblia'])->name('mundos.pdf');
 
 
     // --- 4. PERFIL DE USUARIO (Breeze) ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Ruta para que el admin envíe invitaciones
+    Route::post('/admin/invitar', function (\Illuminate\Http\Request $request) {
+        $request->validate(['email' => 'required|email']);
+        
+        // Enviamos el correo usando el sistema Mail de Laravel
+        Mail::to($request->email)->send(new InvitacionColaborador($request->email));
+        
+        return back()->with('success', '¡Invitación enviada correctamente!');
+    })->name('admin.invitar');
+
+    Route::post('/ia/inspirar', [IAController::class, 'inspirar'])->name('ia.inspirar');
 });
 
 require __DIR__.'/auth.php';

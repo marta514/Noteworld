@@ -46,4 +46,11 @@
     <div style="margin-top: 30px;">
         <a href="{{ route('dashboard.escritor') }}" style="text-decoration: none; color: blue;">← Volver a mi escritorio</a>
     </div>
+
+    <div style="margin-bottom: 20px;">
+    <strong>Generar Reporte PDF:</strong>
+    <a href="{{ route('mundos.pdf', $mundo->id) }}" style="background: #e74c3c; color: white; padding: 5px 10px; text-decoration: none; border-radius: 4px;">📕 Descargar Biblia del Mundo</a>
+    
+    <a href="{{ route('mundos.pdf', $mundo->id) }}" style="background: #e74c3c; color: white; padding: 5px 10px; text-decoration: none; border-radius: 4px;">📕 Descargar Biblia del Mundo</a>
+</div>
 @endsection

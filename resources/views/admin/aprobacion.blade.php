@@ -5,6 +5,7 @@
     <p>Revisa y aprueba el contenido subido por la comunidad.</p>
     <hr>
 
+    
     <h3>🖼️ Imágenes Pendientes de Revisión</h3>
     
     @if($imagenesPendientes->count() > 0)

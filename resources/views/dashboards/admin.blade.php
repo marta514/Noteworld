@@ -5,6 +5,17 @@
     <p>Revisa y aprueba el contenido subido por la comunidad.</p>
     <hr>
 
+    <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+    <h3>📧 Invitar a Colaboradores</h3>
+    <p>Envía una invitación formal para colaborar en la API.</p>
+    
+    <form action="{{ route('admin.invitar') }}" method="POST">
+        @csrf
+        <input type="email" name="email" placeholder="correo@ejemplo.com" required style="padding: 5px; width: 250px;">
+        <button type="submit" style="background: #3498db; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Enviar Invitación</button>
+    </form>
+</div>
+
     <h3>🖼️ Imágenes Pendientes de Revisión</h3>
     
     @if($imagenesPendientes->count() > 0)

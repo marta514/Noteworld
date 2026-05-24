@@ -3,38 +3,30 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class InvitacionColaborador extends Mailable
+class InvitacionColaborador extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+    // Declaramos una variable pública para pasarla a la vista
+    public $correoInvitado;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct()
+    public function __construct($correo)
     {
-        //
+        $this->correoInvitado = $correo;
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invitacion Colaborador',
+            subject: '¡Invitación para colaborar en Noteworld!',
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
@@ -42,11 +34,6 @@ class InvitacionColaborador extends Mailable
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, Attachment>
-     */
     public function attachments(): array
     {
         return [];

@@ -34,13 +34,21 @@ class MundoPolicy
 
     public function update(User $user, Mundo $mundo): bool
     {
-        // Solo retorna VERDADERO si el usuario logueado es el creador del mundo
-        return $user->id === $mundo->user_id;
+        // Usamos == para evitar errores de tipo de dato (string vs integer)
+        if ($user->role == 'admin') {
+            return true;
+        }
+        
+        return $user->id == $mundo->user_id;
     }
 
     public function delete(User $user, Mundo $mundo): bool
     {
-        return $user->id === $mundo->user_id;
+        if ($user->role == 'admin') {
+            return true;
+        }
+        
+        return $user->id == $mundo->user_id;
     }
 
     /**
