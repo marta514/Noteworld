@@ -1,14 +1,12 @@
 <x-mail::message>
-# ¡Te han invitado a colaborar en Noteworld!
+# ¡Has sido invitado a Noteworld!
 
-Hola. El administrador del sistema te ha otorgado acceso exclusivo para que colabores en nuestra API de World Building. 
+El administrador te ha invitado a subir imágenes a nuestra API para enriquecer los Moodboards de la comunidad.
 
-Hemos registrado esta invitación bajo tu correo: **{{ $correoInvitado }}**
-
-<x-mail::button :url="route('register')">
-Aceptar Invitación y Registrarme
+<x-mail::button :url="$urlSegura" color="success">
+Aceptar Invitación y Subir Imagen
 </x-mail::button>
 
-¡Empieza a construir universos y subir imágenes con nosotros!<br>
+Gracias,<br>
 El equipo de {{ config('app.name') }}
 </x-mail::message>

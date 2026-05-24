@@ -1,50 +1,77 @@
 @extends('layouts.libreta')
 
 @section('hoja')
-    <h2>👤 Crear Nuevo Personaje</h2>
-    <p style="color: #666;">Llenando la ficha para el mundo: <strong>{{ \App\Models\Mundo::find($mundoSeleccionadoId)->titulo }}</strong></p>
+<div class="max-w-5xl mx-auto bg-white p-8 rounded-xl shadow-lg border-2 border-turquoise/30">
     
-    <form action="{{ route('personajes.store') }}" method="POST">
-        @csrf
+    <div class="mb-8 border-b-2 border-turquoise pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+            <h2 class="font-fantasy text-4xl text-cerulean flex items-center gap-3">
+                Crear Nuevo Personaje
+            </h2>
+            <p class="text-gray-600 mt-2">
+                Mundo: <strong class="text-grapefruit">{{ \App\Models\Mundo::find($mundoSeleccionadoId)->titulo }}</strong>
+            </p>
+        </div>
+        <a href="{{ route('mundos.show', $mundoSeleccionadoId) }}" class="text-gray-400 hover:text-grapefruit transition duration-300 font-bold mb-1">
+            ← Volver al Mundo
+        </a>
+    </div>
 
+    <form action="{{ route('personajes.store') }}" method="POST" class="space-y-6">
+        @csrf
         <input type="hidden" name="mundo_id" value="{{ $mundoSeleccionadoId }}">
 
-        <div class="form-group">
-            <label for="nombre">Nombre Completo *</label>
-            <input type="text" name="nombre" id="nombre" value="{{ old('nombre') }}" placeholder="Ej. Aragorn, hijo de Arathorn">
+        <div>
+            <label for="nombre" class="block text-lg font-bold text-cerulean mb-2">Nombre Completo *</label>
+            <input type="text" name="nombre" id="nombre" value="{{ old('nombre') }}" placeholder="Ej. Aragorn, hijo de Arathorn" required
+                class="w-full text-gray-800 px-4 py-3 border-2 border-turquoise/40 rounded-xl focus:outline-none focus:border-turquoise focus:ring-4 focus:ring-turquoise/20 bg-old-lace/30 shadow-inner transition-all text-lg">
         </div>
 
-        <div style="display: flex; gap: 15px;">
-            <div class="form-group" style="flex: 1;">
-                <label for="edad">Edad / Tiempo</label>
-                <input type="text" name="edad" id="edad" value="{{ old('edad') }}" placeholder="Ej. 87 años">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label for="edad" class="block text-sm font-bold text-cerulean mb-2">Edad</label>
+                <input type="text" name="edad" id="edad" value="{{ old('edad') }}" placeholder="Ej. 87 años"
+                    class="w-full text-gray-700 px-4 py-2 border-2 border-turquoise/30 rounded-lg focus:outline-none focus:border-turquoise focus:ring-2 focus:ring-turquoise/20 bg-old-lace/30 shadow-inner transition-all">
             </div>
-            <div class="form-group" style="flex: 1;">
-                <label for="genero">Género</label>
-                <input type="text" name="genero" id="genero" value="{{ old('genero') }}" placeholder="Ej. Masculino">
+            <div>
+                <label for="genero" class="block text-sm font-bold text-cerulean mb-2">Género</label>
+                <input type="text" name="genero" id="genero" value="{{ old('genero') }}" placeholder="Ej. Masculino"
+                    class="w-full text-gray-700 px-4 py-2 border-2 border-turquoise/30 rounded-lg focus:outline-none focus:border-turquoise focus:ring-2 focus:ring-turquoise/20 bg-old-lace/30 shadow-inner transition-all">
             </div>
-            <div class="form-group" style="flex: 1;">
-                <label for="especie">Especie / Raza</label>
-                <input type="text" name="especie" id="especie" value="{{ old('especie') }}" placeholder="Ej. Dúnadan">
+            <div>
+                <label for="especie" class="block text-sm font-bold text-cerulean mb-2">Especie / Raza</label>
+                <input type="text" name="especie" id="especie" value="{{ old('especie') }}" placeholder="Ej. Dúnadan"
+                    class="w-full text-gray-700 px-4 py-2 border-2 border-turquoise/30 rounded-lg focus:outline-none focus:border-turquoise focus:ring-2 focus:ring-turquoise/20 bg-old-lace/30 shadow-inner transition-all">
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="biografia">Historia / Biografía</label>
-            <textarea name="biografia" id="biografia" rows="4">{{ old('biografia') }}</textarea>
+        <div>
+            <label for="biografia" class="block text-sm font-bold text-cerulean mb-2">Historia / Biografía</label>
+            <textarea name="biografia" id="biografia" rows="4" placeholder="¿Cuál es su origen y su destino?"
+                class="w-full text-gray-700 px-4 py-3 border-2 border-turquoise/30 rounded-lg focus:outline-none focus:border-turquoise focus:ring-2 focus:ring-turquoise/20 bg-old-lace/30 shadow-inner transition-all resize-y">{{ old('biografia') }}</textarea>
         </div>
 
-        <div class="form-group">
-            <label for="apariencia_fisica">Apariencia Física</label>
-            <textarea name="apariencia_fisica" id="apariencia_fisica" rows="3" placeholder="Color de ojos, cicatrices, vestimenta..."></textarea>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="apariencia_fisica" class="block text-sm font-bold text-cerulean mb-2">Apariencia Física</label>
+                <textarea name="apariencia_fisica" id="apariencia_fisica" rows="4" placeholder="Color de ojos, cicatrices, vestimenta..."
+                    class="w-full text-gray-700 px-4 py-3 border-2 border-turquoise/30 rounded-lg focus:outline-none focus:border-turquoise focus:ring-2 focus:ring-turquoise/20 bg-old-lace/30 shadow-inner transition-all resize-y">{{ old('apariencia_fisica') }}</textarea>
+            </div>
+            <div>
+                <label for="personalidad" class="block text-sm font-bold text-cerulean mb-2">Personalidad y Rasgos</label>
+                <textarea name="personalidad" id="personalidad" rows="4" placeholder="Miedos, virtudes, vicios..."
+                    class="w-full text-gray-700 px-4 py-3 border-2 border-turquoise/30 rounded-lg focus:outline-none focus:border-turquoise focus:ring-2 focus:ring-turquoise/20 bg-old-lace/30 shadow-inner transition-all resize-y">{{ old('personalidad') }}</textarea>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="personalidad">Personalidad y Rasgos</label>
-            <textarea name="personalidad" id="personalidad" rows="3" placeholder="Miedos, virtudes, vicios..."></textarea>
+        <div class="pt-6 border-t-2 border-turquoise/20 flex items-center justify-end gap-6 mt-8">
+            <a href="{{ route('mundos.show', $mundoSeleccionadoId) }}" class="text-gray-500 hover:text-grapefruit font-bold transition duration-300">
+                Cancelar
+            </a>
+            <button type="submit" class="bg-grapefruit hover:bg-apricot text-white font-bold text-lg py-3 px-8 rounded-xl transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 esquina-cortada">
+                Guardar Ficha
+            </button>
         </div>
-
-        <button type="submit" style="padding:10px 20px; background: #000; color: #fff; border: none; cursor:pointer;">Guardar Ficha de Personaje</button>
-        <a href="{{ route('mundos.show', $mundoSeleccionadoId) }}" style="margin-left: 10px; color: #666;">Cancelar</a>
     </form>
+</div>
 @endsection

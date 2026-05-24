@@ -22,7 +22,7 @@ class PdfController extends Controller
         }]);
 
         // Generamos el PDF apuntando a una vista que crearemos en el siguiente paso
-        $pdf = Pdf::loadView('pdfs.biblia', compact('mundo', 'filtroCategoria'));
+        $pdf = Pdf::loadView('pdf.biblia', compact('mundo', 'filtroCategoria'));
 
         
         // stream() abre el PDF directamente en el navegador 

@@ -1,70 +1,97 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Noteworld - Mi Escritorio</title>
-    <style> 
-        body { font-family: sans-serif; padding: 20px; background: #f4f6f8; color: #333; } 
-        h1 { font-size: 24px; margin-bottom: 20px; }
-        .seccion { margin-top: 40px; }
-        
-        /* Sistema de cuadrícula para las cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 15px; }
-        
-        /* Estilos de la tarjeta */
-        .card { 
-            background: white; padding: 20px; border: 1px solid #e0e0e0; 
-            border-radius: 8px; text-decoration: none; color: black; 
-            display: block; transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        .card h3 { margin-top: 0; color: #111; }
-        .card p { color: #666; font-size: 14px; line-height: 1.4; }
-        
-        .btn-nuevo { display: inline-block; padding: 10px 15px; background: #000; color: #fff; text-decoration: none; border-radius: 5px; }
-    </style>
-</head>
-<body>
-    <h1>Hola, {{ auth()->user()->name ?? 'Escritor' }} 👋</h1>
+@extends('layouts.libreta')
+
+@section('hoja')
+<div style="display: flex; gap: 40px;">
     
-    <a href="{{ route('mundos.create') }}" class="btn-nuevo">+ Crear Nuevo Mundo</a>
+    <div style="flex: 1;">
+       <div class="flex items-center justify-between mb-6">
+    <h1 class="font-fantasy text-3xl">Hola, {{ auth()->user()->name ?? 'Escritor' }}</h1>
+    
+    <a href="{{ route('mundos.create') }}" class="bg-cerulean text-old-lace px-4 py-2 esquina-cortada font-bold hover:bg-grapefruit transition">
+        + Crear Nuevo Mundo
+    </a>
+</div>
 
+        <div class="seccion">
+            <h2 class="font-fantasy text-xl border-b-2 border-turquoise mb-4">Tus Universos</h2>
+            @if($misMundos->count() > 0)
+                <div class="grid grid-cols-1 gap-4">
+                    @foreach($misMundos as $mundo)
+                        <a href="{{ route('mundos.show', $mundo->id) }}" class="bg-old-lace p-4 border-l-4 border-turquoise shadow-sm hover:shadow-md transition">
+                            <h3 class="font-bold text-lg">{{ $mundo->titulo }}</h3>
+                            <p class="text-sm text-gray-600">{{ Str::limit($mundo->descripcion, 60) }}</p>
+                        </a>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-gray-500 italic">Aún no has creado mundos.</p>
+            @endif
+        </div>
+
+        <div style="flex: 1;">
     <div class="seccion">
-        <h2>Tus Universos</h2>
+        <h2 class="font-fantasy text-xl border-b-2 border-turquoise mb-4 py-2">Explorar la Comunidad</h2>
+        <p class="text-sm text-gray-500 mb-4">Descubre lo que otros escritores están creando:</p>
         
-        @if($misMundos->count() > 0)
-            <div class="grid">
-                @foreach($misMundos as $mundo)
-                    <a href="{{ route('mundos.show', $mundo->id) }}" class="card">
-                        <h3>🌍 {{ $mundo->titulo }}</h3>
-                        <p>{{ Str::limit($mundo->descripcion, 100) }}</p>
-                    </a>
-                @endforeach
-            </div>
-        @else
-            <p style="color: #777;">Aún no has creado ningún mundo. ¡Empieza a escribir tu historia!</p>
-        @endif
-    </div>
-
-    <hr style="margin-top: 40px; border: 0; border-top: 1px solid #ddd;">
-
-    <div class="seccion">
-        <h2>Explorar la Comunidad</h2>
-        <p style="color: #777; margin-top: -15px; margin-bottom: 20px;">Descubre lo que otros escritores están creando.</p>
-
         @if($comunidad->count() > 0)
-            <div class="grid">
+            <div class="grid grid-cols-1 gap-4">
                 @foreach($comunidad as $mundoAjeno)
-                    <a href="{{ route('mundos.show', $mundoAjeno->id) }}" class="card" style="border-left: 4px solid #4CAF50;">
-                        <h3>📖 {{ $mundoAjeno->titulo }}</h3>
-                        <p>{{ Str::limit($mundoAjeno->descripcion, 80) }}</p>
+                    <a href="{{ route('mundos.show', $mundoAjeno->id) }}" 
+                       class="bg-white p-4 border border-turquoise rounded-lg hover:bg-old-lace transition block">
+                        <h3 class="font-bold text-cerulean">{{ $mundoAjeno->titulo }}</h3>
+                        <p class="text-xs text-gray-600">Creado por: {{ $mundoAjeno->user->name }}</p>
                     </a>
                 @endforeach
             </div>
         @else
-            <p style="color: #777;">Aún no hay publicaciones de otros usuarios en la plataforma.</p>
+            <p class="text-gray-500 italic">La comunidad aún no ha compartido mundos.</p>
         @endif
     </div>
+</div>
+    </div>
 
-</body>
-</html>
+    <div style="flex: 1; border-left: 2px dashed #ccc; padding-left: 40px;">
+        <h2 class="font-fantasy text-xl mb-6">Tus Métricas</h2>
+        
+        <div style="margin-bottom: 30px;">
+            <h3 class="text-center font-bold text-cerulean">Personajes por Mundo</h3>
+            <canvas id="graficoPersonajes"></canvas>
+        </div>
+
+        <div>
+            <h3 class="text-center font-bold text-cerulean">Distribución de Lore</h3>
+            <canvas id="graficoCategorias"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Gráfico 1: Barras
+    const ctxPersonajes = document.getElementById('graficoPersonajes').getContext('2d');
+    new Chart(ctxPersonajes, {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($nombresMundos) !!},
+            datasets: [{
+                label: 'Personajes',
+                data: {!! json_encode($cantidadPersonajes) !!},
+                backgroundColor: '#24E5D2', // Turquoise
+            }]
+        }
+    });
+
+    // Gráfico 2: Dona
+    const ctxCategorias = document.getElementById('graficoCategorias').getContext('2d');
+    new Chart(ctxCategorias, {
+        type: 'doughnut',
+        data: {
+            labels: {!! json_encode($nombresCategorias) !!},
+            datasets: [{
+                data: {!! json_encode($cantidadCategorias) !!},
+                backgroundColor: ['#FE6D73', '#FFCB77', '#2584A7', '#24E5D2']
+            }]
+        }
+    });
+</script>
+@endsection

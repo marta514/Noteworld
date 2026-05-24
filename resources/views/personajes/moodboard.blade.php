@@ -1,29 +1,55 @@
 @extends('layouts.libreta')
 
 @section('hoja')
-    <h2>🎨 Moodboard de Personaje: {{ $personaje->nombre }}</h2>
-    <p>Inspiración visual para el personaje en <strong>{{ $personaje->mundo->titulo }}</strong></p>
+<div class="flex flex-col md:flex-row gap-6 h-[800px]">
     
-    <a href="{{ route('personajes.show', $personaje->id) }}" style="text-decoration: none; color: blue;">← Volver a la Ficha</a>
-    <hr>
-
-    <div style="display: flex; gap: 20px; margin-top: 20px;">
-        <aside style="width: 200px; border-right: 1px solid #ccc; padding-right: 10px;">
-            <h3>Subcarpetas API</h3>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 10px;"><a href="#">👤 Rostros</a></li>
-                <li style="margin-bottom: 10px;"><a href="#">⚔️ Armas</a></li>
-                <li style="margin-bottom: 10px;"><a href="#">🛡️ Armaduras</a></li>
-                <li style="margin-bottom: 10px;"><a href="#">🐎 Monturas</a></li>
-            </ul>
-        </aside>
-
-        <main style="flex-grow: 1;">
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-                <div style="aspect-ratio: 1/1; background: #eee; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999;">Imagen Personaje</div>
-                <div style="aspect-ratio: 1/1; background: #eee; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999;">Inspiración 1</div>
-                <div style="aspect-ratio: 1/1; background: #eee; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999;">Inspiración 2</div>
-            </div>
-        </main>
+    <!-- Columna Izquierda: Banco de la API (Personajes) -->
+    <div class="w-full md:w-1/4 bg-old-lace border-2 border-turquoise p-4 rounded-lg overflow-y-auto shadow-inner">
+        <h3 class="font-fantasy text-xl text-cerulean mb-4 border-b border-turquoise pb-2">Banco de Personajes</h3>
+        <p class="text-sm text-gray-600 mb-4">Haz clic en una imagen para añadirla a la inspiración de {{ $personaje->nombre }}.</p>
+        
+        <div class="grid grid-cols-2 gap-3">
+            @forelse($imagenesApi as $img)
+                <form action="{{ route('personajes.moodboard.agregar', $personaje->id) }}" method="POST" class="aspect-square">
+                    @csrf
+                    <input type="hidden" name="image_id" value="{{ $img->id }}">
+                    <button type="submit" class="w-full h-full hover:scale-105 transition transform focus:outline-none rounded-lg overflow-hidden shadow-md border-2 border-transparent hover:border-grapefruit">
+                        <img src="{{ asset('storage/' . $img->url) }}" class="w-full h-full object-cover" alt="Imagen API">
+                    </button>
+                </form>
+            @empty
+                <p class="text-xs text-gray-500 col-span-2">No hay imágenes de personajes en la API.</p>
+            @endforelse
+        </div>
     </div>
+
+    <!-- Columna Derecha: Cuadrícula del Personaje -->
+    <div class="w-full md:w-3/4 bg-white border-2 border-dashed border-gray-300 p-6 rounded-lg relative overflow-y-auto">
+        
+        <!-- Encabezado del Moodboard -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-gray-100 pb-4">
+            <div>
+                <h2 class="font-fantasy text-3xl text-cerulean">Moodboard: {{ $personaje->nombre }}</h2>
+                <p class="text-gray-500 text-sm mt-1">Inspiración visual en <strong>{{ $personaje->mundo->titulo }}</strong></p>
+            </div>
+            <a href="{{ route('personajes.show', $personaje->id) }}" class="text-grapefruit hover:text-apricot font-bold transition duration-300">
+                ← Volver a la Ficha
+            </a>
+        </div>
+
+        <!-- Lienzo de la cuadrícula -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 content-start">
+            @forelse($imagenesGuardadas as $guardada)
+                <div class="relative group aspect-square rounded-lg overflow-hidden shadow-lg border border-gray-200 bg-gray-50 flex items-center justify-center">
+                    <img src="{{ asset('storage/' . $guardada->url) }}" class="w-full h-full object-cover transition duration-300 group-hover:scale-110" alt="Imagen en Moodboard">
+                </div>
+            @empty
+                <div class="col-span-full flex flex-col items-center justify-center h-64 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50">
+                    <span class="text-5xl mb-2">🎨</span>
+                    <p>El moodboard está vacío. Selecciona referencias visuales del panel izquierdo.</p>
+                </div>
+            @endforelse
+        </div>
+    </div>
+</div>
 @endsection

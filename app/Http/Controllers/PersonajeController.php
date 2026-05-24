@@ -38,6 +38,10 @@ class PersonajeController extends Controller
      */
     public function store(StorePersonajeRequest $request)
     {
+        $mundo = \App\Models\Mundo::findOrFail($request->mundo_id);
+    if ($mundo->user_id !== auth()->id()) {
+        abort(403, 'No puedes crear personajes en mundos ajenos.');
+    }
         // Validamos los datos con tu Form Request
         $datosValidados = $request->validated();
 
@@ -57,21 +61,38 @@ class PersonajeController extends Controller
         return view('personajes.show', compact('personaje'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Personaje $personaje)
-    {
-        //
+{
+    if ($personaje->mundo->user_id !== auth()->id()) {
+        abort(403, 'Acceso denegado: No puedes editar personajes de otros mundos.');
     }
+    // Carga la vista que acabamos de crear y le pasa el personaje
+    return view('personajes.edit', compact('personaje'));
+}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePersonajeRequest $request, Personaje $personaje)
-    {
-        //
+public function update(Request $request, Personaje $personaje)
+{
+    if ($personaje->mundo->user_id !== auth()->id()) {
+        abort(403, 'Acceso denegado.');
     }
+    // Validamos los datos (puedes ajustar las reglas si lo necesitas)
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'edad' => 'nullable|string|max:100',
+        'genero' => 'nullable|string|max:100',
+        'especie' => 'nullable|string|max:100',
+        'biografia' => 'nullable|string',
+        'apariencia_fisica' => 'nullable|string',
+        'personalidad' => 'nullable|string',
+    ]);
+
+    // Actualizamos el personaje con los datos del formulario
+    $personaje->update($request->all());
+
+    // Lo enviamos de regreso a su ficha con un mensaje de éxito
+    return redirect()->route('personajes.show', $personaje->id)
+                     ->with('success', '¡La ficha del personaje ha sido actualizada!');
+}
 
     /**
      * Remove the specified resource from storage.
@@ -84,12 +105,24 @@ class PersonajeController extends Controller
     /**
      * Moodboard del personaje (¡Esta es la única que debe existir!)
      */
-    public function moodboard(\App\Models\Personaje $personaje)
-    {
-        $imagenesAprobadas = \App\Models\Image::where('ref_type', 'personaje')
-                                              ->where('estado', 'approved')
-                                              ->get();
+    public function moodboard(Personaje $personaje) 
+{
+    // 1. Buscamos las imágenes en la API
+    $imagenesApi = \App\Models\Image::where('estado', 'approved')
+                                    ->where('ref_type', 'personaje')
+                                    ->get();
+    
+    // 2. Traemos las imágenes guardadas por este personaje
+    $imagenesGuardadas = $personaje->imagenesMoodboard;
 
-        return view('personajes.moodboard', compact('personaje', 'imagenesAprobadas'));
-    }
+    // 3. ¡EL DETALLE ESTABA AQUÍ! 
+    // Debemos enviar las tres variables ('personaje', 'imagenesApi', 'imagenesGuardadas')
+    return view('personajes.moodboard', compact('personaje', 'imagenesApi', 'imagenesGuardadas'));
+}
+
+public function agregarAlMoodboard(Request $request, Personaje $personaje) 
+{
+    $personaje->imagenesMoodboard()->attach($request->image_id);
+    return back()->with('success', '¡Imagen añadida a la ficha del personaje!');
+}
 } 

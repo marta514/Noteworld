@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Tus clases personalizadas globales */
+@layer utilities {
+    .esquina-cortada {
+        clip-path: polygon(
+            15px 0,                 /* Corte superior izquierdo */
+            calc(100% - 15px) 0,    /* Borde superior */
+            100% 15px,              /* Corte superior derecho */
+            100% calc(100% - 15px), /* Borde derecho */
+            calc(100% - 15px) 100%, /* Corte inferior derecho */
+            15px 100%,              /* Borde inferior */
+            0 calc(100% - 15px),    /* Corte inferior izquierdo */
+            0 15px                  /* Borde izquierdo */
+        );
+    }
+    /* La clase que da el efecto de libreta abierta */
+    .libreta-abierta {
+        background: linear-gradient(90deg, #f0f0f0 0%, #ffffff 5%, #ffffff 95%, #f0f0f0 100%);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2), inset 0 0 10px rgba(0,0,0,0.05);
+        border-radius: 8px;
+    }
+    
+    /* Línea central que simula la encuadernación */
+    .encuadernacion {
+        border-left: 2px dashed #d1d5db;
+        margin: 0 20px;
+    }
+}

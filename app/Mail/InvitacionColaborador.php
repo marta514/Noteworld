@@ -3,39 +3,41 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\URL; // <-- Importante
 
 class InvitacionColaborador extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    // Declaramos una variable pública para pasarla a la vista
+
     public $correoInvitado;
 
-    public function __construct($correo)
+    public function __construct($correoInvitado)
     {
-        $this->correoInvitado = $correo;
+        $this->correoInvitado = $correoInvitado;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '¡Invitación para colaborar en Noteworld!',
+            subject: 'Invitación a Colaborar en Noteworld API',
         );
     }
 
     public function content(): Content
     {
-        return new Content(
-            markdown: 'emails.invitacion',
-        );
-    }
+        // Generamos la ruta firmada segura
+        $urlSegura = URL::signedRoute('colaborar');
 
-    public function attachments(): array
-    {
-        return [];
+        return new Content(
+            markdown: 'emails.invitacion', // O 'view' si no usas markdown
+            with: [
+                'urlSegura' => $urlSegura,
+            ],
+        );
     }
 }

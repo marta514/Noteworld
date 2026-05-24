@@ -28,4 +28,9 @@ public function entradas() {
 public function images() {
     return $this->hasMany(Image::class);
 }
+
+public function imagenesMoodboard() 
+{
+    return $this->belongsToMany(Image::class, 'image_mundo');
+}
 }

@@ -1,0 +1,21 @@
+/* Busca y cambia estas variables en el archivo */
+body, .wrapper {
+    background-color: #FDF5E6; /* Tu color old-lace */
+}
+
+.header {
+    padding: 25px 0;
+    text-align: center;
+    background-color: #007BA7; /* Tu color cerulean */
+}
+
+.button-success,
+.button-primary {
+    background-color: #FD5956; /* Tu color grapefruit */
+    border-bottom: 8px solid #E04845; /* Sombra para el botón */
+}
+
+.panel {
+    background-color: #ffffff;
+    border-left: 4px solid #40E0D0; /* Tu color turquoise */
+}

@@ -9,6 +9,7 @@ use App\Http\Controllers\PdfController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvitacionColaborador;
 use App\Http\Controllers\IAController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     // Si el usuario ya inició sesión...
@@ -34,21 +35,10 @@ Route::get('/generar-token', function () {
 Route::middleware(['auth'])->group(function () {
     
     // --- 1. DASHBOARDS ---
-    Route::get('/panel-escritor', function () {
-        $misMundos = \App\Models\Mundo::where('user_id', auth()->id())->get();
-        $comunidad = \App\Models\Mundo::where('user_id', '!=', auth()->id())
-                                      ->latest()
-                                      ->take(6)
-                                      ->get();
-        return view('dashboards.escritor', compact('misMundos', 'comunidad'));
-    })->name('dashboard.escritor');
-
-   Route::get('/panel-admin', function () {
-        // Buscamos las imágenes que Postman dejó como "pending"
-        $imagenesPendientes = \App\Models\Image::where('estado', 'pending')->get();
-        
-        return view('dashboards.admin', compact('imagenesPendientes'));
-    })->name('dashboard.admin');
+    // --- 1. DASHBOARDS ---
+    Route::get('/panel-escritor', [DashboardController::class, 'escritor'])->name('dashboard.escritor');
+    Route::get('/panel-admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
+    
 
     // Ruta para aprobar imágenes desde el panel de admin
     Route::patch('/admin/imagenes/{id}/aprobar', function ($id) {
@@ -63,13 +53,13 @@ Route::middleware(['auth'])->group(function () {
     // --- 2. RUTAS PERSONALIZADAS (Moodboards) ---
     Route::get('/mundos/{mundo}/moodboard', [MundoController::class, 'moodboard'])->name('mundos.moodboard');
     Route::get('/personajes/{personaje}/moodboard', [PersonajeController::class, 'moodboard'])->name('personajes.moodboard');
-
+    Route::post('/mundos/{mundo}/moodboard/agregar', [MundoController::class, 'agregarAlMoodboard'])->name('mundos.moodboard.agregar');
 
     // --- 3. RECURSOS (CRUDS) ---
     Route::resource('mundos', MundoController::class)->except(['index']);
     Route::resource('personajes', PersonajeController::class)->except(['index']);
     Route::resource('entradas', EntradaController::class)->except(['index']);
-    Route::get('/mundos/{mundo}/pdf', [PdfController::class, 'generarBiblia'])->name('mundos.pdf');
+    Route::get('/mundos/{mundo}/biblia', [PdfController::class, 'generarBiblia'])->name('pdf.biblia');
 
 
     // --- 4. PERFIL DE USUARIO (Breeze) ---
@@ -88,6 +78,14 @@ Route::middleware(['auth'])->group(function () {
     })->name('admin.invitar');
 
     Route::post('/ia/inspirar', [IAController::class, 'inspirar'])->name('ia.inspirar');
+
+    // Rutas Públicas de la API (Para invitados)
+Route::get('/colaborar', function () {
+    return view('api.colaborar');
+})->name('colaborar')->middleware('signed'); // <-- ¡El candado mágico!
+
+Route::post('/colaborar/subir', [\App\Http\Controllers\Api\ImageController::class, 'store'])->name('colaborar.subir');
 });
+
 
 require __DIR__.'/auth.php';

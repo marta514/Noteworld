@@ -51,21 +51,35 @@ public function create(Request $request)
         return view('entradas.show', compact('entrada'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Entrada $entrada)
-    {
-        //
+   public function edit(Entrada $entrada)
+{
+    if ($entrada->mundo->user_id !== auth()->id()) {
+        abort(403, 'Acceso denegado: No puedes editar el lore de otros mundos.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateEntradaRequest $request, Entrada $entrada)
-    {
-        //
-    }
+    return view('entradas.edit', compact('entrada'));
+}
+
+public function update(Request $request, Entrada $entrada)
+{
+    // 1. Validamos los datos entrantes
+    $request->validate([
+        'titulo' => 'required|string|max:255',
+        'categoria' => 'required|string',
+        'contenido' => 'required|string',
+    ]);
+
+    // 2. Actualizamos la entrada en la base de datos
+    $entrada->update([
+        'titulo' => $request->titulo,
+        'categoria' => $request->categoria,
+        'contenido' => $request->contenido,
+    ]);
+
+    // 3. Redirigimos de vuelta a la vista de lectura con un mensaje de éxito
+    return redirect()->route('entradas.show', $entrada->id)
+                     ->with('success', '¡El pergamino ha sido reescrito con éxito!');
+}
 
     /**
      * Remove the specified resource from storage.
