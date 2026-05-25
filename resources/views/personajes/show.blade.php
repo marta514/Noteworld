@@ -57,21 +57,26 @@
 
     </div>
 
-    <div class="pt-6 border-t-2 border-turquoise/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="pt-6 border-t-2 border-turquoise/20 flex flex-col sm:flex-row items-center justify-end gap-4">
         
         <a href="{{ route('personajes.moodboard', $personaje->id) }}" class="w-full sm:w-auto bg-cerulean hover:bg-turquoise text-white font-bold text-lg py-3 px-8 rounded-xl transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 flex items-center justify-center gap-3">
-            <span class="text-2xl"></span> Abrir Moodboard
+            Abrir Moodboard
         </a>
 
         @if(auth()->check() && $personaje->mundo->user_id == auth()->id())
-        <a href="{{ route('personajes.edit', $personaje->id) }}" class="w-full sm:w-auto bg-white border-2 border-cerulean text-cerulean hover:bg-cerulean hover:text-white font-bold text-lg py-3 px-8 rounded-xl transition duration-300 shadow-sm flex items-center justify-center gap-3">
-            Editar Ficha
-        </a>
-    @endif
+            
+            <a href="{{ route('personajes.edit', $personaje->id) }}" class="w-full sm:w-auto bg-white border-2 border-cerulean text-cerulean hover:bg-cerulean hover:text-white font-bold text-lg py-3 px-8 rounded-xl transition duration-300 shadow-sm flex items-center justify-center gap-3">
+                Editar Ficha
+            </a>
 
-
+            <form action="{{ route('personajes.destroy', $personaje->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar a {{ $personaje->nombre }}? Esta acción no se puede deshacer.');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="w-full sm:w-auto bg-red-50 border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white font-bold text-lg py-3 px-8 rounded-xl transition duration-300 shadow-sm flex items-center justify-center gap-3">
+                    Eliminar Personaje
+                </button>
+            </form>
+        @endif
     </div>
-
-
 </div>
 @endsection

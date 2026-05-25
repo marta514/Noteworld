@@ -94,13 +94,18 @@ public function update(Request $request, Personaje $personaje)
                      ->with('success', '¡La ficha del personaje ha sido actualizada!');
 }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Personaje $personaje)
-    {
-        //
-    }
+{
+    // Guardamos el ID del mundo ANTES de borrar el personaje
+    $mundoId = $personaje->mundo_id;
+
+    // Borramos el personaje
+    $personaje->delete();
+
+    // Redirigimos al mundo correspondiente con un mensaje de éxito
+    return redirect()->route('mundos.show', $mundoId)
+                     ->with('success', 'El personaje ha sido eliminado correctamente.');
+}
 
     /**
      * Moodboard del personaje (¡Esta es la única que debe existir!)

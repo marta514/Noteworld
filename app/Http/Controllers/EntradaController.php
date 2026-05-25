@@ -81,11 +81,16 @@ public function update(Request $request, Entrada $entrada)
                      ->with('success', '¡El pergamino ha sido reescrito con éxito!');
 }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Entrada $entrada)
-    {
-        //
-    }
+{
+    // Guardamos el ID del mundo para regresar después
+    $mundoId = $entrada->mundo_id;
+
+    // Eliminamos la entrada
+    $entrada->delete();
+
+    // Redirigimos al mundo con un aviso
+    return redirect()->route('mundos.show', $mundoId)
+                     ->with('success', 'La entrada ha sido eliminada con éxito.');
+}
 }

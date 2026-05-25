@@ -31,10 +31,20 @@
         </a>
 
         @if(auth()->check() && $entrada->mundo->user_id == auth()->id())
-    <a href="{{ route('entradas.edit', $entrada->id) }}" class="...">
-        Editar Entrada
-    </a>
-@endif
+            <div class="flex gap-3">
+                <a href="{{ route('entradas.edit', $entrada->id) }}" class="bg-white border-2 border-cerulean text-cerulean hover:bg-cerulean hover:text-white font-bold py-2 px-6 rounded-lg transition duration-300">
+                    Editar Entrada
+                </a>
+
+                <form action="{{ route('entradas.destroy', $entrada->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta entrada?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-50 border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white font-bold py-2 px-6 rounded-lg transition duration-300">
+                        Eliminar
+                    </button>
+                </form>
+            </div>
+        @endif
         
     </div>
 </div>

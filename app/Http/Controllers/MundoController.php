@@ -18,7 +18,22 @@ class MundoController extends Controller
     {
         return view('mundos.create');
     }
+// Función para eliminar un mundo
+    public function destroy(Mundo $mundo)
+{
+    // 1. SEGURIDAD: Validar propiedad
+    if ($mundo->user_id !== auth()->id()) {
+        abort(403, 'Acceso denegado.');
+    }
 
+    // 2. ELIMINACIÓN
+    $mundo->delete();
+
+    // 3. REDIRECCIÓN AL DASHBOARD DEL ESCRITOR
+    return redirect()->route('dashboard.escritor')
+                     ->with('success', 'El mundo ha sido eliminado correctamente.');
+}
+    
     // Función para guardar en base de datos (Esta ya la tienes)
     public function store(StoreMundoRequest $request)
     {
