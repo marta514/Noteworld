@@ -134,13 +134,7 @@
                                 </button>
                             </form>
 
-                            <form action="{{ route('admin.imagenes.rechazar', $imagen->id) ?? '#' }}" method="POST" class="flex-1">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="w-full bg-grapefruit hover:bg-red-600 text-white text-sm font-bold py-2 px-2 rounded transition shadow-sm">
-                                    ✗ Rechazar
-                                </button>
-                            </form>
+                            
                         </div>
                     </div>
                 @endforeach

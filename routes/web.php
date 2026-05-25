@@ -54,6 +54,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mundos/{mundo}/moodboard', [MundoController::class, 'moodboard'])->name('mundos.moodboard');
     Route::get('/personajes/{personaje}/moodboard', [PersonajeController::class, 'moodboard'])->name('personajes.moodboard');
     Route::post('/mundos/{mundo}/moodboard/agregar', [MundoController::class, 'agregarAlMoodboard'])->name('mundos.moodboard.agregar');
+    Route::post('/personajes/{personaje}/moodboard/agregar', [App\Http\Controllers\PersonajeController::class, 'agregarAlMoodboard'])
+    ->name('personajes.moodboard.agregar')
+    ->middleware('auth');
 
     // --- 3. RECURSOS (CRUDS) ---
     Route::resource('mundos', MundoController::class)->except(['index']);

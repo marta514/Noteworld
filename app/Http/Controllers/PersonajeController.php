@@ -122,6 +122,11 @@ public function update(Request $request, Personaje $personaje)
 
 public function agregarAlMoodboard(Request $request, Personaje $personaje) 
 {
+    // ¡SEGURIDAD AÑADIDA! El creador del mundo al que pertenece el personaje es el único autorizado
+    if ($personaje->mundo->user_id !== auth()->id()) {
+        abort(403, 'No tienes permiso para editar este moodboard.');
+    }
+
     $personaje->imagenesMoodboard()->attach($request->image_id);
     return back()->with('success', '¡Imagen añadida a la ficha del personaje!');
 }

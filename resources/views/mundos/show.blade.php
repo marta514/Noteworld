@@ -51,12 +51,21 @@
         </div>
     </div>
 
+    <div class="pt-6 border-t-2 border-turquoise/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+        
+        <a href="{{ route('mundos.moodboard', $mundo->id) }}" class="w-full sm:w-auto bg-cerulean hover:bg-turquoise text-white font-bold text-lg py-3 px-8 rounded-xl transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 flex items-center justify-center gap-3">
+            <span class="text-2xl"></span> Abrir Moodboard
+        </a>
+
+
+
+    </div>
     <div class="mt-12 pt-6 border-t border-gray-200 flex justify-between items-center">
         <a href="{{ route('dashboard.escritor') }}" class="text-cerulean font-bold hover:underline">← Volver a mi escritorio</a>
         
         <div class="bg-old-lace/40 p-4 rounded-lg border border-turquoise/30 mt-6 shadow-sm max-w-xl">
     <h3 class="font-bold text-cerulean mb-2 flex items-center gap-2">
-        📄 Descargar Biblia del Mundo
+        Descargar Biblia del Mundo
     </h3>
     <form action="{{ route('pdf.biblia', $mundo->id) }}" method="GET" class="flex flex-col sm:flex-row gap-4 items-end">
         

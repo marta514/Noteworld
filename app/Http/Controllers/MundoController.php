@@ -89,9 +89,12 @@ public function moodboard(Mundo $mundo)
 // Agrega esta NUEVA función justo debajo
 public function agregarAlMoodboard(Request $request, Mundo $mundo) 
 {
-    // Adjuntamos la imagen a la tabla intermedia
+    // ¡SEGURIDAD AÑADIDA! Solo el creador puede agregar imágenes
+    if ($mundo->user_id !== auth()->id()) {
+        abort(403, 'No tienes permiso para editar el moodboard de este mundo.');
+    }
+
     $mundo->imagenesMoodboard()->attach($request->image_id);
-    
     return back()->with('success', '¡Imagen añadida a tu cuadrícula!');
 }
 }
